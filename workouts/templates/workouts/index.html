@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1>{% block title %}Workouts{% endblock %}</h1>
+  {% if g.user %}
+    <a class="action" href="{{ url_for('workouts.create') }}">New</a>
+  {% endif %}
+{% endblock %}
+
+{% block content %}
+  {% for workout in workouts %}
+    <article class="workout">
+      <header>
+        <div>
+          <h1>{{ workout['title'] }}</h1>
+          <div class="about">by {{ workout['username'] }} on {{ workout['created'].strftime('%Y-%m-%d') }}</div>
+        </div>
+        {% if g.user['id'] == workout['user_id'] %}
+          <a class="action" href="{{ url_for('workouts.update', id=workout['id']) }}">Edit</a>
+        {% endif %}
+      </header>
+      <p class="body">{{ workout['notes'] }}</p>
+    </article>
+    {% if not loop.last %}
+      <hr>
+    {% endif %}
+  {% endfor %}
+{% endblock %}
