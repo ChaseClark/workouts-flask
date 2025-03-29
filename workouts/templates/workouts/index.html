@@ -12,14 +12,13 @@
     <article class="workout">
       <header>
         <div>
-          <h1>{{ workout['title'] }}</h1>
-          <div class="about">by {{ workout['username'] }} on {{ workout['created'].strftime('%Y-%m-%d') }}</div>
+          <h1>{{ workout['created'].strftime('%Y-%m-%d') }}</h1>
+          <div class="about">{{ workout['notes'] }}</div>
         </div>
         {% if g.user['id'] == workout['user_id'] %}
           <a class="action" href="{{ url_for('workouts.update', id=workout['id']) }}">Edit</a>
         {% endif %}
       </header>
-      <p class="body">{{ workout['notes'] }}</p>
     </article>
     {% if not loop.last %}
       <hr>

@@ -40,8 +40,14 @@ def register():
             except db.IntegrityError:
                 error = f"User {username} is already registered."
             else:
-                return redirect(url_for("auth.login"))
-
+                # login on succesful register
+                # fetch from db so that we can get the id as well
+                user = db.execute(
+                    "SELECT * FROM user WHERE username = ?", (username,)
+                ).fetchone()
+                session.clear()
+                session["user_id"] = user["id"]
+                return redirect(url_for("index"))
         flash(error)
 
     return render_template("auth/register.html")

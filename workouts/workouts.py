@@ -10,11 +10,14 @@ bp = Blueprint("workouts", __name__)
 @bp.route("/")
 @login_required
 def index():
+    id = g.user["id"]
     db = get_db()
     workouts = db.execute(
-        "SELECT p.id, title, notes, created, user_id, username"
-        " FROM workout p JOIN user u ON p.user_id = u.id"
-        " ORDER BY created DESC"
+        "SELECT id, notes, created, user_id"
+        " FROM workout"
+        " WHERE user_id = ?"
+        " ORDER BY created DESC",
+        (id,),
     ).fetchall()
     return render_template("workouts/index.html", workouts=workouts)
 
@@ -23,20 +26,16 @@ def index():
 @login_required
 def create():
     if request.method == "POST":
-        title = request.form["title"]
         notes = request.form["notes"]
         error = None
-
-        if not title:
-            error = "Title is required."
 
         if error is not None:
             flash(error)
         else:
             db = get_db()
             db.execute(
-                "INSERT INTO workout (title, notes, user_id)" " VALUES (?, ?, ?)",
-                (title, notes, g.user["id"]),
+                "INSERT INTO workout (notes, user_id)" " VALUES (?, ?)",
+                (notes, g.user["id"]),
             )
             db.commit()
             return redirect(url_for("workouts.index"))
@@ -50,20 +49,16 @@ def update(id):
     workout = get_workout(id)
 
     if request.method == "POST":
-        title = request.form["title"]
         notes = request.form["notes"]
         error = None
-
-        if not title:
-            error = "Title is required."
 
         if error is not None:
             flash(error)
         else:
             db = get_db()
             db.execute(
-                "UPDATE workout SET title = ?, notes = ?" " WHERE id = ?",
-                (title, notes, id),
+                "UPDATE workout SET notes = ?" " WHERE id = ?",
+                (notes, id),
             )
             db.commit()
             return redirect(url_for("workouts.index"))
@@ -85,10 +80,10 @@ def get_workout(id, check_user=True):
     workout = (
         get_db()
         .execute(
-            "SELECT w.id, title, notes, created, user_id, username"
-            " FROM workout w JOIN user u ON w.user_id = u.id"
-            " WHERE w.id = ?",
-            (id,),
+            "SELECT id, notes, created, user_id"
+            " FROM workout"
+            " WHERE id = ? AND user_id = ?",
+            (id, g.user["id"]),
         )
         .fetchone()
     )
