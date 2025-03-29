@@ -1,4 +1,12 @@
-from flask import Blueprint, flash, g, redirect, render_template, request, url_for
+from flask import (
+    Blueprint,
+    flash,
+    g,
+    redirect,
+    render_template,
+    request,
+    url_for,
+)
 from werkzeug.exceptions import abort
 
 from workouts.auth import login_required
@@ -16,7 +24,8 @@ def index():
         "SELECT id, notes, created, user_id"
         " FROM workout"
         " WHERE user_id = ?"
-        " ORDER BY created DESC",
+        " ORDER BY created DESC"
+        " LIMIT 15",
         (id,),
     ).fetchall()
     return render_template("workouts/index.html", workouts=workouts)
@@ -33,12 +42,14 @@ def create():
             flash(error)
         else:
             db = get_db()
-            db.execute(
+            cursor = db.execute(
                 "INSERT INTO workout (notes, user_id)" " VALUES (?, ?)",
                 (notes, g.user["id"]),
             )
+            last_id = cursor.lastrowid
             db.commit()
-            return redirect(url_for("workouts.index"))
+            # redirect to update so that user can add exercises to workout
+            return redirect(url_for("workouts.update", id=last_id))
 
     return render_template("workouts/create.html")
 
