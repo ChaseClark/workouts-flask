@@ -3,7 +3,7 @@
 {% block header %}
 <h1 class="display-1 my-4">{% block title %}Latest Workouts{% endblock %}</h1>
 {% if g.user %}
-<a class="btn btn-lg btn-success action px-4 fs-3" href="{{ url_for('workouts.create') }}">New</a>
+<a class="btn btn-lg btn-primary action px-4 fs-3" href="{{ url_for('workouts.create') }}">Add Workout</a>
 {% endif %}
 {% endblock %}
 

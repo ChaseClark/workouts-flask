@@ -64,7 +64,7 @@ def create():
             (g.user["id"],),
         ).fetchall()
 
-    return render_template("workouts/create.html", exercises=exercises)
+    return render_template("workouts/create_update.html", exercises=exercises)
 
 
 @bp.route("/<int:id>/update", methods=("GET", "POST"))
@@ -87,7 +87,7 @@ def update(id):
             db.commit()
             return redirect(url_for("workouts.index"))
 
-    return render_template("workouts/update.html", workout=workout)
+    return render_template("workouts/create_update.html", workout=workout)
 
 
 @bp.route("/<int:id>/delete", methods=("POST",))

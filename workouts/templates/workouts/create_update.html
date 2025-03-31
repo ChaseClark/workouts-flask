@@ -1,15 +1,24 @@
 {% extends 'base.html' %}
 
 {% block header %}
+{% if workout %}
+<h1>{% block created %}Editing "{{ workout['created'].strftime('%Y-%m-%d') }}"{% endblock %}</h1>
+{% else %}
 <h1 class="my-3">{% block title %}New Workout{% endblock %}</h1>
-{% endblock %}
+{% endif %}
 
+{% endblock %}
 {% block content %}
 <form method="post">
   <div class="mb-3 text-start">
     <label class="form-label" for="notes">Notes:</label>
+    {% if workout %}
     <textarea class="form-control fs-3" style="min-height: 200px;" name="notes"
-      id="notes">{{ request.form['notes'] }}</textarea>
+      id="notes">{{ request.form['notes'] or workout['notes'] }}</textarea>
+    {% else %}
+    <textarea class="form-control fs-3" style="min-height: 200px;" name="notes"
+      id="notes">{{ request.form['notes']}}</textarea>
+    {% endif %}
   </div>
 
   <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#newExerciseModal">
