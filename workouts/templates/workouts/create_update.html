@@ -3,6 +3,9 @@
 {% block header %}
 {% if workout %}
 <h1 class="my-5">{% block created %}Editing "{{ workout['created'].strftime('%Y-%m-%d') }}"{% endblock %}</h1>
+<form action="{{ url_for('workouts.delete', id=workout['id']) }}" method="post">
+  <input class="btn btn-sm btn-danger" type="submit" value="Delete" onclick="return confirm('Are you sure?');">
+</form>
 {% else %}
 <h1 class="my-5">{% block title %}New Workout{% endblock %}</h1>
 {% endif %}
@@ -21,33 +24,47 @@
     {% endif %}
   </div>
 
-  <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#newExerciseModal">
+  <button type="button" class="btn btn-primary my-3" data-bs-toggle="modal" data-bs-target="#newExerciseModal">
     Create New Exercise
   </button>
 
   {% if exercises %}
   <p>select here</p>
+  {% else %}
+  <p class="text-info-emphasis fs-3 my-5">[ You must first create an exercise before you can log it. ]</p>
   {% endif %}
   <div class="row-auto my-5">
     <input class="btn btn-lg btn-success" type="submit" value="Save">
   </div>
 </form>
 
+
+
 <!-- Modal -->
 <div class="modal fade" id="newExerciseModal" tabindex="-1" aria-labelledby="newExerciseModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
-      <div class="modal-header">
-        <h1 class="modal-title fs-5" id="newExerciseModalLabel">Create New Exercise</h1>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        ...
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-        <button type="button" class="btn btn-primary">Create</button>
-      </div>
+      <form action="/exercises/create" method="post">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="newExerciseModalLabel">Create New Exercise</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-3 text-start">
+            <label for="exerciseName" class="form-label">Name</label>
+            <input type="text" class="form-control" id="exerciseName" placeholder="Bodyweight Push ups" required>
+          </div>
+          <select id="category" class="form-select" aria-label="Select a category" required>
+            {% for cat in categories %}
+            <option value="{{ cat }}">{{ categories[cat] }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="submit" class="btn btn-primary">Create</button>
+        </div>
+      </form>
     </div>
   </div>
 </div>

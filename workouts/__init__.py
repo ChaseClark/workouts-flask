@@ -1,6 +1,8 @@
 import os
 
-from flask import Flask
+from flask import Flask, g
+
+from workouts import exercises
 
 
 def create_app(test_config=None):
@@ -40,6 +42,8 @@ def create_app(test_config=None):
     from . import workouts
 
     app.register_blueprint(workouts.bp)
+    app.register_blueprint(exercises.bp, url_prefix="/exercises")
     app.add_url_rule("/", endpoint="index")
+
 
     return app

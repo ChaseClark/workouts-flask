@@ -11,8 +11,12 @@ def get_db():
             current_app.config["DATABASE"], detect_types=sqlite3.PARSE_DECLTYPES
         )
         g.db.row_factory = sqlite3.Row
-
+        # make categories dict instead of a db table for now
+        # if needed, this can be a db table later
+        categories = {1: "Push", 2: "Pull", 3: "Legs", 4: "Cardio", 5: "Other"}
+        g.categories = categories
     return g.db
+
 
 def close_db(e=None):
     db = g.pop("db", None)
