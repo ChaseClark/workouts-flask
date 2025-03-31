@@ -28,7 +28,11 @@ def index():
         " LIMIT 15",
         (id,),
     ).fetchall()
-    return render_template("workouts/index.html", workouts=workouts)
+
+    return render_template(
+        "workouts/index.html",
+        workouts=workouts,
+    )
 
 
 @bp.route("/create", methods=("GET", "POST"))
@@ -50,8 +54,17 @@ def create():
             db.commit()
             # redirect to update so that user can add exercises to workout
             return redirect(url_for("workouts.update", id=last_id))
+    elif request.method == "GET":
+        db = get_db()
+        exercises = db.execute(
+            " SELECT id, name, category_id, user_id"
+            " FROM exercise"
+            " WHERE user_id = ?"
+            " ORDER BY name",
+            (g.user["id"],),
+        ).fetchall()
 
-    return render_template("workouts/create.html")
+    return render_template("workouts/create.html", exercises=exercises)
 
 
 @bp.route("/<int:id>/update", methods=("GET", "POST"))
