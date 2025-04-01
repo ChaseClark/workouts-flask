@@ -44,7 +44,7 @@
 <div class="modal fade" id="newExerciseModal" tabindex="-1" aria-labelledby="newExerciseModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
-      <form action="/exercises/create" method="post">
+      <form action="{{ url_for('exercises.create') }}" method="post">
         <div class="modal-header">
           <h1 class="modal-title fs-5" id="newExerciseModalLabel">Create New Exercise</h1>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -52,9 +52,10 @@
         <div class="modal-body">
           <div class="mb-3 text-start">
             <label for="exerciseName" class="form-label">Name</label>
-            <input type="text" class="form-control" id="exerciseName" placeholder="Bodyweight Push ups" required>
+            <input type="text" class="form-control" id="exerciseName" name="exerciseName"
+              placeholder="Bodyweight Push ups" required>
           </div>
-          <select id="category" class="form-select" aria-label="Select a category" required>
+          <select id="category" name="category" class="form-select" aria-label="Select a category" required>
             {% for cat in categories %}
             <option value="{{ cat }}">{{ categories[cat] }}</option>
             {% endfor %}

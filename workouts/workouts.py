@@ -5,6 +5,7 @@ from flask import (
     redirect,
     render_template,
     request,
+    session,
     url_for,
 )
 from werkzeug.exceptions import abort
@@ -35,6 +36,9 @@ def index():
     )
 
 
+# TODO: to simplify things, workouts.create should just create a workout and
+# redirect the user to the edit page with the new id
+# this will reduce the amount of duplication required
 @bp.route("/create", methods=("GET", "POST"))
 @login_required
 def create():
@@ -73,7 +77,7 @@ def create():
 @login_required
 def update(id):
     workout = get_workout(id)
-
+    session["workout_id"] = id
     if request.method == "POST":
         notes = request.form["notes"]
         error = None
@@ -88,10 +92,21 @@ def update(id):
             )
             db.commit()
             return redirect(url_for("workouts.index"))
-
-    return render_template(
-        "workouts/create_update.html", workout=workout, categories=g.categories
-    )
+    elif request.method == "GET":
+        db = get_db()
+        exercises = db.execute(
+            " SELECT id, name, category_id, user_id"
+            " FROM exercise"
+            " WHERE user_id = ?"
+            " ORDER BY name",
+            (g.user["id"],),
+        ).fetchall()
+        return render_template(
+            "workouts/create_update.html",
+            workout=workout,
+            categories=g.categories,
+            exercises=exercises,
+        )
 
 
 @bp.route("/<int:id>/delete", methods=("POST",))

@@ -5,6 +5,7 @@ from flask import (
     redirect,
     render_template,
     request,
+    session,
     url_for,
 )
 from werkzeug.exceptions import abort
@@ -21,7 +22,8 @@ bp = Blueprint("exercises", __name__)
 )
 @login_required
 def create():
-    name = request.form["name"]
+    id = session["workout_id"]
+    name = request.form["exerciseName"]
     if not name:
         error = "Exercise name is required."
     error = None
@@ -29,9 +31,10 @@ def create():
         flash(error)
     else:
         db = get_db()
+        # TODO: use try catch except IntegrityError like in auth.py
         db.execute(
             "INSERT INTO exercise (name, user_id)" " VALUES (?, ?)",
             (name, g.user["id"]),
         )
         db.commit()
-        return "ok"
+        return redirect(url_for("workouts.update", id=id))
