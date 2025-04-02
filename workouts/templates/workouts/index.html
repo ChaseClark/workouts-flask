@@ -12,9 +12,9 @@
   {% for workout in workouts %}
   <li class="list-group-item">
     <h2><a class="action"
-        href="{{ url_for('workouts.update', id=workout['id']) }}">{{ workout['created'].strftime('%Y-%m-%d') }}</a></h2>
+        href="{{ url_for('workouts.detail', id=workout['id']) }}">{{ workout['created'].strftime('%Y-%m-%d') }}</a></h2>
     <p>{{ workout['notes'] }}</p>
   </li>
   {% endfor %}
 </ul>
-{% endblock %}  
+{% endblock %}

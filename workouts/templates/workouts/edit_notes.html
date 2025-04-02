@@ -1,0 +1,9 @@
+<form hx-put="/{{id}}/update" hx-target="this" hx-swap="outerHTML">
+    <div class="mb-3 text-start">
+        <label class="form-label" for="notes">Notes:</label>
+        <textarea class="form-control fs-3" style="min-height: 200px;" name="notes"
+            id="notes">{{ workout['notes'] }}</textarea>
+    </div>
+    <button type="submit" class="btn btn-success">Save</button>
+    <button hx-get="/{{ id }}/detail" class="btn btn-danger">Cancel</button>
+</form>

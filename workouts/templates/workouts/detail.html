@@ -12,31 +12,31 @@
 
 {% endblock %}
 {% block content %}
-<form method="post">
+<div hx-target="this" hx-swap="outerHTML">
   <div class="mb-3 text-start">
     <label class="form-label" for="notes">Notes:</label>
     {% if workout %}
-    <textarea class="form-control fs-3" style="min-height: 200px;" name="notes"
+    <textarea disabled class="form-control fs-3" style="min-height: 200px;" name="notes"
       id="notes">{{ request.form['notes'] or workout['notes'] }}</textarea>
     {% else %}
     <textarea class="form-control fs-3" style="min-height: 200px;" name="notes"
       id="notes">{{ request.form['notes']}}</textarea>
     {% endif %}
   </div>
+  <button hx-get="/{{ id }}/edit" class="btn btn-warning">Edit Notes</button>
+</div>
 
-  <button type="button" class="btn btn-primary my-3" data-bs-toggle="modal" data-bs-target="#newExerciseModal">
-    Create New Exercise
-  </button>
+<button type="button" class="btn btn-primary my-3" data-bs-toggle="modal" data-bs-target="#newExerciseModal">
+  Create New Exercise
+</button>
 
-  {% if exercises %}
-  <p>select here</p>
-  {% else %}
-  <p class="text-info-emphasis fs-3 my-5">[ You must first create an exercise before you can log it. ]</p>
-  {% endif %}
-  <div class="row-auto my-5">
-    <input class="btn btn-lg btn-success" type="submit" value="Save">
-  </div>
-</form>
+{% if exercises %}
+<p>select here</p>
+{% else %}
+<p class="text-info-emphasis fs-3 my-5">[ You must first create an exercise before you can log it. ]</p>
+{% endif %}
+<div class="row-auto my-5">
+</div>
 
 
 
