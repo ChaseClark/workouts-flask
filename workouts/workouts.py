@@ -43,22 +43,15 @@ def index():
 @login_required
 def create():
     if request.method == "POST":
-        notes = request.form["notes"]
-        error = None
-
-        if error is not None:
-            flash(error)
-        else:
-            db = get_db()
-            cursor = db.execute(
-                "INSERT INTO workout (notes, user_id)" " VALUES (?, ?)",
-                (notes, g.user["id"]),
-            )
-            last_id = cursor.lastrowid
-            db.commit()
-            # redirect to update so that user can add exercises to workout
-            return redirect(url_for("workouts.update", id=last_id))
-        return render_template("workouts/create_update.html", categories=g.categories)
+        db = get_db()
+        cursor = db.execute(
+            "INSERT INTO workout (notes, user_id) VALUES (?, ?)",
+            ("", g.user["id"]),
+        )
+        last_id = cursor.lastrowid
+        db.commit()
+        # redirect to detail so that user can add exercises to workout
+        return redirect(url_for("workouts.detail", id=last_id))
 
 
 @bp.route("/<int:id>/detail", methods=("GET", "PUT"))
@@ -83,7 +76,6 @@ def detail(id):
             id=id,
         )
     elif request.method == "PUT":
-        print("update PUT request fired!")
         notes = request.form["notes"]
         error = None
 

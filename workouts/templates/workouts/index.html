@@ -2,9 +2,9 @@
 
 {% block header %}
 <h1 class="display-1 my-4">{% block title %}Latest Workouts{% endblock %}</h1>
-{% if g.user %}
-<a class="btn btn-lg btn-primary action px-4 fs-3" href="{{ url_for('workouts.create') }}">Add Workout</a>
-{% endif %}
+<form method="post" action="{{ url_for('workouts.create') }}">
+  <input class="btn btn-lg btn-primary action px-4 fs-3" value="Add Workout" type="submit">
+</form>
 {% endblock %}
 
 {% block content %}
@@ -12,7 +12,8 @@
   {% for workout in workouts %}
   <li class="list-group-item">
     <h2><a class="action"
-        href="{{ url_for('workouts.detail', id=workout['id']) }}">{{ workout['created'].strftime('%Y-%m-%d') }}</a></h2>
+        href="{{ url_for('workouts.detail', id=workout['id']) }}">{{ workout['created'].strftime('%Y-%m-%d') }}</a>
+    </h2>
     <p>{{ workout['notes'] }}</p>
   </li>
   {% endfor %}
