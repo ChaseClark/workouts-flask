@@ -36,9 +36,6 @@ def index():
     )
 
 
-# TODO: to simplify things, workouts.create should just create a workout and
-# redirect the user to the edit page with the new id
-# this will reduce the amount of duplication required
 @bp.route("/create", methods=("POST",))
 @login_required
 def create():
@@ -50,11 +47,10 @@ def create():
         )
         last_id = cursor.lastrowid
         db.commit()
-        # redirect to detail so that user can add exercises to workout
         return redirect(url_for("workouts.detail", id=last_id))
 
 
-@bp.route("/<int:id>/detail", methods=("GET", "PUT"))
+@bp.route("/<int:id>/detail", methods=("GET",))
 @login_required
 def detail(id):
     workout = get_workout(id)
@@ -75,10 +71,15 @@ def detail(id):
             exercises=exercises,
             id=id,
         )
-    elif request.method == "PUT":
+
+
+@bp.route("/<int:id>/notes/edit", methods=("GET", "PUT"))
+@login_required
+def notes_edit(id):
+    workout = get_workout(id)
+    if request.method == "PUT":
         notes = request.form["notes"]
         error = None
-
         if error is not None:
             flash(error)
         else:
@@ -88,15 +89,15 @@ def detail(id):
                 (notes, id),
             )
             db.commit()
-            return redirect(url_for("workouts.index"))
+            return render_template("workouts/partials/notes.html", workout=workout)
+    return render_template("workouts/partials/edit_notes.html", workout=workout)
 
 
-# only editing the notes for now
-@bp.route("/<int:id>/edit", methods=("GET",))
+@bp.route("/<int:id>/notes", methods=("GET",))
 @login_required
-def edit(id):
+def notes(id):
     workout = get_workout(id)
-    return render_template("workouts/edit_notes.html", workout=workout, id=id)
+    return render_template("workouts/partials/notes.html", workout=workout)
 
 
 @bp.route("/<int:id>/delete", methods=("POST",))

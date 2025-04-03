@@ -1,0 +1,8 @@
+<div hx-target="this" hx-swap="outerHTML">
+    <div class="mb-3 text-start">
+        <label class="form-label" for="notes">Notes:</label>
+        <textarea disabled class="form-control fs-3" style="min-height: 200px;" name="notes"
+            id="notes">{{ request.form['notes'] or workout['notes'] }}</textarea>
+    </div>
+    <button hx-get="{{ url_for('workouts.notes_edit', id=workout.id) }}" class="btn btn-warning">Edit Notes</button>
+</div>
