@@ -1,16 +1,31 @@
-<div class="card shadow my-5">
+<div class="card shadow my-5 w-50 mx-auto">
     <div class="card-body">
-        <button type="button" class="btn btn-primary my-3" data-bs-toggle="modal" data-bs-target="#newExerciseModal">
+        <h2>Add Exercise</h2>
+        <hr class="my-3">
+        <button type="button" class="btn btn-sm btn-primary mb-3" data-bs-toggle="modal"
+            data-bs-target="#newExerciseModal">
             Create New Exercise
         </button>
-        <hr class="my-3">
-        <select class="form-select form-select-lg w-50 mx-auto" name="select_exercise"
-            aria-label="Select an exercise to log.">
+        <select class="form-select form-select-lg" name="select_exercise" aria-label="Select an exercise to log.">
             {% for e in exercises %}
             <option value="{{ e.id }}">{{ e.name }}</option>
             {% endfor %}
         </select>
-        <button hx-put="#htmxputorpost" type="button" class="btn btn-success my-3">
+        <form class="text-start mt-4">
+            <div class="mb-3">
+                <label for="sets" class="form-label">Sets</label>
+                <input type="number" class="form-control" id="sets" name="sets" step="1">
+            </div>
+            <div class="mb-3">
+                <label for="reps" class="form-label">Reps</label>
+                <input type="number" id="reps" name="reps" class="form-control" step="1">
+            </div>
+            <div class="mb-3">
+                <label for="weight" class="form-label">Weight</label>
+                <input type="number" id="weight" name="weight" class="form-control" step=".5">
+            </div>
+        </form>
+        <button hx-put="#htmxputorpost" type="submit" class="btn btn-success my-3">
             Add To Workout
         </button>
     </div>
