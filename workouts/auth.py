@@ -39,7 +39,7 @@ def register():
                 db.commit()
             except db.IntegrityError:
                 error = f"User {username} is already registered."
-            else:
+            finally:
                 # login on succesful register
                 # fetch from db so that we can get the id as well
                 user = db.execute(

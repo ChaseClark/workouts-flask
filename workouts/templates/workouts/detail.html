@@ -3,7 +3,7 @@
 {% block header %}
 {% if workout %}
 <h1 class="my-5">{% block created %}{{ workout['created'].strftime('%Y-%m-%d') }}{% endblock %}</h1>
-<form action="{{ url_for('workouts.delete', id=workout['id']) }}" method="post">
+<form class="my-4" action="{{ url_for('workouts.delete', id=workout['id']) }}" method="post">
   <input class="btn btn-sm btn-danger" type="submit" value="Delete" onclick="return confirm('Are you sure?');">
 </form>
 {% else %}

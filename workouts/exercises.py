@@ -25,16 +25,20 @@ def create():
     id = session["workout_id"]
     name = request.form["exerciseName"]
     category_id = request.form["category"]
+    error = None
     if not name:
         error = "Exercise name is required."
-    error = None
-    if error is not None:
-        flash(error)
-    else:
-        db = get_db()
-        db.execute(
-            "INSERT INTO exercise (name, category_id, user_id)" " VALUES (?, ?, ?)",
-            (name, category_id, g.user["id"]),
-        )
-        db.commit()
+    if error is None:
+        try:
+            db = get_db()
+            db.execute(
+                "INSERT INTO exercise (name, category_id, user_id)" " VALUES (?, ?, ?)",
+                (name, category_id, g.user["id"]),
+            )
+            db.commit()
+        except db.IntegrityError:
+            error = f"Exercise: '{name}' already exists."
+            flash(error)
         return redirect(url_for("workouts.detail", id=id))
+    else:
+        flash(error)
