@@ -20,10 +20,6 @@
 <!-- i prefer to load straight from server -->
 {% include "workouts/partials/notes.html" %}
 
-{% if exercises %}
 {% include "workouts/partials/add_exercise.html" %}
-{% else %}
-<p class="text-info-emphasis fs-3 my-5">[ You must first create an exercise before you can log it. ]</p>
-{% endif %}
 
 {% endblock %}

@@ -31,6 +31,7 @@ CREATE TABLE exercise (
   category_id INTEGER NOT NULL,
   name TEXT UNIQUE NOT NULL,
   FOREIGN KEY (user_id) REFERENCES user (id)
+  FOREIGN KEY (category_id) REFERENCES category (id)
 );
 
 CREATE TABLE workout_exercise (

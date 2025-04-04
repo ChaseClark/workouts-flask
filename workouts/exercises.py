@@ -24,6 +24,7 @@ bp = Blueprint("exercises", __name__)
 def create():
     id = session["workout_id"]
     name = request.form["exerciseName"]
+    category_id = request.form["category"]
     if not name:
         error = "Exercise name is required."
     error = None
@@ -31,10 +32,9 @@ def create():
         flash(error)
     else:
         db = get_db()
-        # TODO: use try catch except IntegrityError like in auth.py
         db.execute(
-            "INSERT INTO exercise (name, user_id)" " VALUES (?, ?)",
-            (name, g.user["id"]),
+            "INSERT INTO exercise (name, category_id, user_id)" " VALUES (?, ?, ?)",
+            (name, category_id, g.user["id"]),
         )
         db.commit()
-        return redirect(url_for("workouts.update", id=id))
+        return redirect(url_for("workouts.detail", id=id))
