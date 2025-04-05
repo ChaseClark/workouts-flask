@@ -64,14 +64,12 @@ def detail(id):
             " ORDER BY name",
             (g.user["id"],),
         ).fetchall()
-        for i, row in enumerate(exercises):
-            print(f"{row['id']=}")
-            print(row[i])
         workout_exercises = db.execute(
-            " SELECT id, user_id, workout_id, exercise_id, sets, reps, weight"
+            " SELECT workout_exercise.id, workout_exercise.user_id, workout_id, exercise_id, sets, reps, weight, exercise.id, name"
             " FROM workout_exercise"
-            " WHERE user_id = ? AND workout_id = ?"
-            " ORDER BY id",
+            " INNER JOIN exercise ON workout_exercise.exercise_id = exercise.id"
+            " WHERE workout_exercise.user_id = ? AND workout_id = ?"
+            " ORDER BY workout_exercise.id",
             (g.user["id"], id),
         ).fetchall()
         return render_template(

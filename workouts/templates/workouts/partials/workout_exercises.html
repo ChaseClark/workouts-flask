@@ -1,6 +1,7 @@
 <div id="workout_exercises" class="my-5">
-    <h2>Logged Exercises</h2>
+    <h2 class="my-3">Logged Exercises</h2>
     {% for we in workout_exercises %}
+    <p>{{ we.name }}</p>
     <p>{{ we.sets }}</p>
     <p>{{ we.reps }}</p>
     <p>{{ we.weight }}</p>
