@@ -1,0 +1,8 @@
+<div id="workout_exercises" class="my-5">
+    <h2>Logged Exercises</h2>
+    {% for we in workout_exercises %}
+    <p>{{ we.sets }}</p>
+    <p>{{ we.reps }}</p>
+    <p>{{ we.weight }}</p>
+    {% endfor %}
+</div>

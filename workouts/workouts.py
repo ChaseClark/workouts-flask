@@ -50,7 +50,7 @@ def create():
         return redirect(url_for("workouts.detail", id=last_id))
 
 
-@bp.route("/<int:id>/detail", methods=("GET",))
+@bp.route("/<int:id>", methods=("GET",))
 @login_required
 def detail(id):
     workout = get_workout(id)
@@ -64,13 +64,43 @@ def detail(id):
             " ORDER BY name",
             (g.user["id"],),
         ).fetchall()
+        for i, row in enumerate(exercises):
+            print(f"{row['id']=}")
+            print(row[i])
+        workout_exercises = db.execute(
+            " SELECT id, user_id, workout_id, exercise_id, sets, reps, weight"
+            " FROM workout_exercise"
+            " WHERE user_id = ? AND workout_id = ?"
+            " ORDER BY id",
+            (g.user["id"], id),
+        ).fetchall()
         return render_template(
             "workouts/detail.html",
             workout=workout,
             categories=g.categories,
             exercises=exercises,
+            workout_exercises=workout_exercises,
             id=id,
         )
+
+
+# Add exercise to workout
+@bp.route("/<int:id>/add-exercise", methods=("POST",))
+@login_required
+def add_exercise(id):
+    db = get_db()
+    exercise = request.form["select_exercise"]
+    sets = request.form["sets"]
+    reps = request.form["reps"]
+    weight = request.form["weight"]
+    print(f"{exercise=} {sets=} {reps=} {weight=}")
+    db.execute(
+        "INSERT INTO workout_exercise (user_id, workout_id, exercise_id, sets, reps, weight)"
+        " VALUES (?, ?, ?, ?, ?, ?)",
+        (g.user["id"], id, exercise, sets, reps, weight),
+    )
+    db.commit()
+    return redirect(url_for("workouts.detail", id=id))
 
 
 @bp.route("/<int:id>/notes/edit", methods=("GET", "PUT"))
@@ -129,3 +159,21 @@ def get_workout(id, check_user=True):
         abort(403)
 
     return workout
+
+
+def get_exercise(id):
+    exercise = (
+        get_db()
+        .execute(
+            "SELECT id, user_id, category_id, name"
+            " FROM exercise"
+            " WHERE id = ? AND user_id = ?",
+            (id, g.user["id"]),
+        )
+        .fetchone()
+    )
+
+    if exercise is None:
+        abort(404, f"workout id {id} doesn't exist.")
+
+    return exercise

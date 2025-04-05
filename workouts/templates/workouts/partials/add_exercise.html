@@ -6,12 +6,12 @@
             data-bs-target="#newExerciseModal">
             Create New Exercise
         </button>
-        <select class="form-select form-select-lg" name="select_exercise" aria-label="Select an exercise to log.">
-            {% for e in exercises %}
-            <option value="{{ e.id }}">{{ e.name }}</option>
-            {% endfor %}
-        </select>
-        <form class="text-start mt-4">
+        <form action="{{ url_for('workouts.add_exercise', id=id)}}" method="post" class="text-start mt-4">
+            <select class="form-select form-select-lg" name="select_exercise" aria-label="Select an exercise to log.">
+                {% for e in exercises %}
+                <option value="{{ e.id }}">{{ e.name }}</option>
+                {% endfor %}
+            </select>
             <div class="mb-3">
                 <label for="sets" class="form-label">Sets</label>
                 <input type="number" class="form-control" id="sets" name="sets" step="1">
@@ -24,10 +24,12 @@
                 <label for="weight" class="form-label">Weight</label>
                 <input type="number" id="weight" name="weight" class="form-control" step=".5">
             </div>
+            <div class="text-center">
+                <button type="submit" class="btn btn-success my-3">
+                    Add To Workout
+                </button>
+            </div>
         </form>
-        <button hx-put="#htmxputorpost" type="submit" class="btn btn-success my-3">
-            Add To Workout
-        </button>
     </div>
 </div>
 
