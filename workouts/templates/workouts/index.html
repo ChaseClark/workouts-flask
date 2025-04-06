@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block header %}
-<h1 class="display-1 my-4">{% block title %}Latest Workouts{% endblock %}</h1>
+<h1 class="display-1 my-5">{% block title %}Latest Workouts{% endblock %}</h1>
 <form method="post" action="{{ url_for('workouts.create') }}">
   <input class="btn btn-lg btn-primary action px-4 fs-3" value="Add Workout" type="submit">
 </form>
