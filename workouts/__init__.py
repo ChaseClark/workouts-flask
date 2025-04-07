@@ -2,7 +2,7 @@ import os
 from datetime import datetime
 from flask import Flask, g, jsonify
 
-from workouts import exercises
+from workouts import exercises, workout_exercises
 
 
 def create_app(test_config=None):
@@ -46,6 +46,7 @@ def create_app(test_config=None):
 
     app.register_blueprint(workouts.bp)
     app.register_blueprint(exercises.bp, url_prefix="/exercises")
+    app.register_blueprint(workout_exercises.bp, url_prefix="/workout-exercises")
     app.add_url_rule("/", endpoint="index")
 
     return app

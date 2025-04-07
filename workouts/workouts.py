@@ -82,7 +82,6 @@ def detail(id):
         )
 
 
-# Add exercise to workout
 @bp.route("/<int:id>/add-exercise", methods=("POST",))
 @login_required
 def add_exercise(id):
@@ -131,9 +130,8 @@ def notes(id):
 @bp.route("/<int:id>/delete", methods=("POST",))
 @login_required
 def delete(id):
-    get_workout(id)
     db = get_db()
-    db.execute("DELETE FROM workout WHERE id = ?", (id,))
+    db.execute("DELETE FROM workout WHERE id = ? AND user_id = ?", (id, g.user["id"]))
     db.commit()
     return redirect(url_for("workouts.index"))
 
