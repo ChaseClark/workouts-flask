@@ -3,6 +3,7 @@
 {% block header %}
 <h1 class="display-1 my-5">{% block title %}Latest Workouts{% endblock %}</h1>
 <form method="post" action="{{ url_for('workouts.create') }}">
+  <input class="form-control my-2 w-50 mx-auto" type="datetime-local" id="time" name="time" required />
   <input class="btn btn-lg btn-primary action px-4 fs-3" value="Add Workout" type="submit">
 </form>
 {% endblock %}

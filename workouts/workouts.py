@@ -1,3 +1,4 @@
+from datetime import datetime
 from flask import (
     Blueprint,
     flash,
@@ -25,7 +26,7 @@ def index():
         "SELECT id, notes, created, user_id"
         " FROM workout"
         " WHERE user_id = ?"
-        " ORDER BY created DESC"
+        " ORDER BY created DESC, id"
         " LIMIT 15",
         (id,),
     ).fetchall()
@@ -41,9 +42,13 @@ def index():
 def create():
     if request.method == "POST":
         db = get_db()
+
+        time = request.form["time"]
+        dt = datetime.strptime(time, "%Y-%m-%dT%H:%M")
+        sqlite_time = dt.strftime("%Y-%m-%d %H:%M:%S")
         cursor = db.execute(
-            "INSERT INTO workout (notes, user_id) VALUES (?, ?)",
-            ("", g.user["id"]),
+            "INSERT INTO workout (notes, user_id, created) VALUES (?, ?, ?)",
+            ("", g.user["id"], sqlite_time),
         )
         last_id = cursor.lastrowid
         db.commit()
